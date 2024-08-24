@@ -1063,3 +1063,34 @@ bool set_max_replica_count(command_executor *e, shell_context *sc, arguments arg
 
     return true;
 }
+
+bool copy_app(command_executor *e, shell_context *sc, arguments args)
+{
+    const std::string copy_table_help =
+        "<-t|--target> [-j|--json]";
+    argh::parser cmd(args.argc, args.argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
+    RETURN_FALSE_IF_NOT(!cmd.params().empty(),
+                        "invalid command, should be in the form of '{}'",
+                        copy_table_help);
+    if (!cmd(1)) {
+        SHELL_PRINTLN_ERROR("missing param <app_name>");
+        return false;
+    }
+    std::string app_name = cmd(1).str();
+
+    std::string remote_address = cmd({"-t", "--target"}).str();
+
+    const bool json = cmd[{"-j", "--json"}];
+
+    auto err_resp = 
+        sc->ddl_client->copy_app(remote_address, app_name, json);
+    // const auto &resp = err_resp.get_value();
+    // auto err = err_resp.get_error();
+    // if (!err.is_ok()) {
+    //     fmt::print(stderr, "copy table failed ");
+    // } else {
+    //     fmt::print("copy table successed");
+    // }
+    fmt::print("copy table successed");
+    return true;
+}

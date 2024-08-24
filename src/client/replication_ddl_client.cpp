@@ -1777,5 +1777,34 @@ replication_ddl_client::rename_app(const std::string &old_app_name, const std::s
     req->__set_new_app_name(new_app_name);
     return call_rpc_sync(configuration_rename_app_rpc(std::move(req), RPC_CM_RENAME_APP));
 }
+
+error_with<configuration_copy_app_response>
+replication_ddl_client::copy_app(const std::string &remote_address, const std::string &app_name, bool json)
+{
+    RETURN_ES_NOT_OK_MSG(
+        validate_app_name(app_name), "invalid app_name: '{}'", app_name);
+
+    auto req = std::make_unique<configuration_copy_app_request>();
+    req->remote_address = remote_address;
+    req->app_name = app_name;
+    // auto resp_task = request_meta(RPC_CM_COPY_APP, req);
+    // resp_task->wait();
+
+    // if (resp_task->error() != ERR_OK) {
+    //     return resp_task->error();
+    // }
+
+    // configuration_copy_table_response resp;
+    // ::dsn::unmarshall(resp_task->get_response(), resp);
+
+    // if (resp.err != ERR_OK) {
+    //     std::cout << "copy table failed: " << resp.hint_message << std::endl;
+    //     return resp.err;
+    // } else {
+    //     std::cout << "copy table succeed " << std::endl;
+    // }
+    return call_rpc_sync(configuration_copy_app_rpc(std::move(req), RPC_CM_COPY_APP));
+}
+
 } // namespace replication
 } // namespace dsn

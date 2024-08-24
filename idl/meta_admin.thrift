@@ -182,6 +182,18 @@ struct configuration_rename_app_response
     2:string hint_message;
 }
 
+struct configuration_copy_app_request
+{
+    1:string remote_address;
+    2:string app_name;
+}
+
+struct configuration_copy_app_response
+{
+    1:dsn.error_code err;
+    2:string hint_message;
+}
+
 struct configuration_recall_app_request
 {
     1:i32 app_id;

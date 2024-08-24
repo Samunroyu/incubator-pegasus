@@ -69,6 +69,8 @@ typedef rpc_holder<configuration_set_max_replica_count_request,
     configuration_set_max_replica_count_rpc;
 typedef rpc_holder<configuration_rename_app_request, configuration_rename_app_response>
     configuration_rename_app_rpc;
+typedef rpc_holder<configuration_copy_app_request, configuration_copy_app_response>
+    configuration_copy_app_rpc;
 
 } // namespace replication
 } // namespace dsn

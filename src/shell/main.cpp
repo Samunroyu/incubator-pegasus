@@ -130,6 +130,12 @@ static command_executor commands[] = {
         rename_app,
     },
     {
+        "copy_app",
+        "copy an app",
+        "app_name <-t|--target> [-j|--json]",
+        copy_app,
+    },
+    {
         "set_meta_level",
         "set the meta function level: stopped, blind, freezed, steady, lively",
         "<stopped|blind|freezed|steady|lively>",

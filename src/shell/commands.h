@@ -147,6 +147,8 @@ bool recall_app(command_executor *e, shell_context *sc, arguments args);
 
 bool rename_app(command_executor *e, shell_context *sc, arguments args);
 
+bool copy_app(command_executor *e, shell_context *sc, arguments args);
+
 bool get_app_envs(command_executor *e, shell_context *sc, arguments args);
 
 bool set_app_envs(command_executor *e, shell_context *sc, arguments args);

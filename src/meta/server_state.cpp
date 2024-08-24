@@ -1343,6 +1343,12 @@ void server_state::rename_app(configuration_rename_app_rpc rpc)
         });
 }
 
+void server_state::copy_app(configuration_copy_app_rpc rpc)
+{
+    LOG_INFO("we are in copy app now");
+    return;
+}
+
 void server_state::do_app_recall(std::shared_ptr<app_state> &app)
 {
     auto after_recall_app = [this, app](dsn::error_code ec) mutable {

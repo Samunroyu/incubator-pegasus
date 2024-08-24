@@ -491,6 +491,8 @@ void meta_service::register_rpc_handlers()
     register_rpc_handler_with_rpc_holder(
         RPC_CM_RENAME_APP, "rename_app", &meta_service::on_rename_app);
     register_rpc_handler_with_rpc_holder(
+        RPC_CM_COPY_APP, "copy_app", &meta_service::on_copy_app);
+    register_rpc_handler_with_rpc_holder(
         RPC_CM_LIST_APPS, "list_apps", &meta_service::on_list_apps);
     register_rpc_handler_with_rpc_holder(
         RPC_CM_LIST_NODES, "list_nodes", &meta_service::on_list_nodes);
@@ -625,6 +627,18 @@ void meta_service::on_rename_app(configuration_rename_app_rpc rpc)
     tasking::enqueue(LPC_META_STATE_NORMAL,
                      tracker(),
                      std::bind(&server_state::rename_app, _state.get(), rpc),
+                     server_state::sStateHash);
+}
+
+void meta_service::on_copy_app(configuration_copy_app_rpc rpc)
+{
+    if (!check_status_and_authz(rpc, nullptr, rpc.request().app_name)) {
+        return;
+    }
+
+    tasking::enqueue(LPC_META_STATE_NORMAL,
+                     tracker(),
+                     std::bind(&server_state::copy_app, _state.get(), rpc),
                      server_state::sStateHash);
 }
 

@@ -231,6 +231,7 @@ private:
     void on_rename_app(configuration_rename_app_rpc rpc);
     void on_list_apps(configuration_list_apps_rpc rpc);
     void on_list_nodes(configuration_list_nodes_rpc rpc);
+    void on_copy_app(configuration_copy_app_rpc rpc);
 
     // app env operations
     void update_app_env(app_env_rpc env_rpc);
