@@ -1345,6 +1345,9 @@ void server_state::rename_app(configuration_rename_app_rpc rpc)
 
 void server_state::copy_app(configuration_copy_app_rpc rpc)
 {
+    const auto &request = rpc.request();
+    auto &response = rpc.response();
+    
     LOG_INFO("we are in copy app now");
     return;
 }

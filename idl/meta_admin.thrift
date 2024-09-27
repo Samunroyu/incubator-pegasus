@@ -184,8 +184,10 @@ struct configuration_rename_app_response
 
 struct configuration_copy_app_request
 {
-    1:string remote_address;
-    2:string app_name;
+    1:string app_name;
+    2:string remote_cluster_name;
+    3:optional string remote_app_name;
+    4:optional i32 remote_replica_count;
 }
 
 struct configuration_copy_app_response

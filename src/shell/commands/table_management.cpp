@@ -1066,24 +1066,53 @@ bool set_max_replica_count(command_executor *e, shell_context *sc, arguments arg
 
 bool copy_app(command_executor *e, shell_context *sc, arguments args)
 {
-    const std::string copy_table_help =
-        "<-t|--target> [-j|--json]";
+    // copy_app <app_name> <remote_cluster_name> [-a|--remote_app_name str] [-r|--remote_replica_count num] [-j|--json]
     argh::parser cmd(args.argc, args.argv, argh::parser::PREFER_PARAM_FOR_UNREG_OPTION);
-    RETURN_FALSE_IF_NOT(!cmd.params().empty(),
-                        "invalid command, should be in the form of '{}'",
-                        copy_table_help);
+
     if (!cmd(1)) {
         SHELL_PRINTLN_ERROR("missing param <app_name>");
         return false;
     }
     std::string app_name = cmd(1).str();
 
-    std::string remote_address = cmd({"-t", "--target"}).str();
+    if (!cmd(2)) {
+        SHELL_PRINTLN_ERROR("missing param <remote_cluster_name>");
+        return false;
+    }
+    std::string remote_cluster_name = cmd(2).str();
+
+    if (remote_cluster_name == sc->current_cluster_name) {
+        SHELL_PRINTLN_ERROR("illegal operation: copy app to itself [remote: {}]",
+                            remote_cluster_name);
+        return true;
+    }
+
+    // Read the app name of the remote cluster, if any.
+    // Otherwise, use app_name as the remote_app_name.
+    const std::string remote_app_name(cmd({"-a", "--remote_app_name"}, app_name).str());
+
+    // 0 represents that remote_replica_count is missing, which means the replica count of
+    // the remote app would be the same as the source app.
+    uint32_t remote_replica_count = 0;
+    PARSE_OPT_UINT(remote_replica_count, 0, {"-r", "--remote_replica_count"});
 
     const bool json = cmd[{"-j", "--json"}];
 
-    auto err_resp = 
-        sc->ddl_client->copy_app(remote_address, app_name, json);
+    fmt::println("trying to copy app [app_name: {}, remote_cluster_name: {}, "
+                 "remote_app_name: {}, remote_replica_count: {}]",
+                 app_name,
+                 remote_cluster_name,
+                 remote_app_name,
+                 remote_replica_count);
+
+    auto err_resp = sc->ddl_client->copy_app(app_name,
+                                             remote_cluster_name,
+                                             remote_app_name,
+                                             remote_replica_count,
+                                             json);
+
+    auto err =err_resp.get_error();
+    std::string hint;
     // const auto &resp = err_resp.get_value();
     // auto err = err_resp.get_error();
     // if (!err.is_ok()) {
@@ -1091,6 +1120,8 @@ bool copy_app(command_executor *e, shell_context *sc, arguments args)
     // } else {
     //     fmt::print("copy table successed");
     // }
-    fmt::print("copy table successed");
+    
+    fmt::println("copy table successed");
+
     return true;
 }

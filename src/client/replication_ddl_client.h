@@ -94,9 +94,11 @@ public:
     error_with<configuration_rename_app_response> rename_app(const std::string &old_app_name,
                                                              const std::string &new_app_name);
 
-    error_with<configuration_copy_app_response> copy_app(const std::string &remote_address,
-                                                             const std::string &app_name,
-                                                             bool json);
+    error_with<configuration_copy_app_response> copy_app(const std::string &app_name,
+                                                         const std::string &remote_cluster_name,
+                                                         const std::string &remote_app_name,
+                                                         const uint32_t remote_replica_count,
+                                                         bool json);
 
     dsn::error_code list_apps(const dsn::app_status::type status,
                               bool show_all,

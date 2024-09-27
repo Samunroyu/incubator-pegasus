@@ -1779,14 +1779,20 @@ replication_ddl_client::rename_app(const std::string &old_app_name, const std::s
 }
 
 error_with<configuration_copy_app_response>
-replication_ddl_client::copy_app(const std::string &remote_address, const std::string &app_name, bool json)
+replication_ddl_client::copy_app(const std::string &app_name,
+                                 const std::string &remote_cluster_name,
+                                 const std::string &remote_app_name,
+                                 const uint32_t remote_replica_count,
+                                 bool json)
 {
     RETURN_ES_NOT_OK_MSG(
         validate_app_name(app_name), "invalid app_name: '{}'", app_name);
 
     auto req = std::make_unique<configuration_copy_app_request>();
-    req->remote_address = remote_address;
     req->app_name = app_name;
+    req->remote_cluster_name = remote_cluster_name;
+    req->remote_app_name = remote_app_name;
+    req->remote_replica_count = remote_replica_count;
     // auto resp_task = request_meta(RPC_CM_COPY_APP, req);
     // resp_task->wait();
 

@@ -132,7 +132,8 @@ static command_executor commands[] = {
     {
         "copy_app",
         "copy an app",
-        "app_name <-t|--target> [-j|--json]",
+        "<app_name> <remote_cluster_name> [-a|--remote_app_name str] "
+        "[-r|--remote_replica_count num] [-j|--json]",
         copy_app,
     },
     {
